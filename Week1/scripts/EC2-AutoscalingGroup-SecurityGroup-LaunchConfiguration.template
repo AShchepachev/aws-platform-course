@@ -1,0 +1,59 @@
+{
+	"Resources" : {
+		"myASG": {
+			"Type": "AWS::AutoScaling::AutoScalingGroup",
+			"Properties": {
+				"AvailabilityZones": {
+					"Fn::GetAZs": ""
+				},
+				"LaunchConfigurationName": {
+					"Ref": "myLaunchConfig"
+				},
+				"MinSize": "2",
+				"MaxSize": "2"
+			}
+		},
+
+		"myLaunchConfig": {
+			"Type": "AWS::AutoScaling::LaunchConfiguration",
+			"Properties": {
+				"LaunchConfigurationName": "myLaunchConfig",
+				"KeyName": "aws-course-key-pair-useast1",
+				"ImageId": "ami-0a887e401f7654935",
+				"SecurityGroups": [{
+						"Ref": "mySecurityGroup"
+					}
+				],
+				"InstanceType": "t2.micro",
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": [
+							"",
+							[
+								"#!/bin/bash \n",
+								"sudo yum -y update \n",
+								"wget --no-cookies --no-check-certificate --header \"Cookie: oraclelicense=accept-securebackup-cookie\" http://download.oracle.com/otn-pub/java/jdk/8u241-b07/1f5b5a70bf22433b84d0e960903adac8/jdk-8u241-linux-x64.rpm \n",
+								"sudo rpm -i jdk-8u241-linux-x64.rpm \n"
+							]
+						]
+					}
+				}
+			}
+		},
+		"mySecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "SSH access group",
+				"GroupName": "mySG",
+				"SecurityGroupIngress": [{
+						"IpProtocol" : "tcp",
+						"FromPort" : 22,
+						"ToPort" : 22,
+						"CidrIp" : "0.0.0.0/0"
+					}
+				]
+			}
+		}
+	}
+}
+
