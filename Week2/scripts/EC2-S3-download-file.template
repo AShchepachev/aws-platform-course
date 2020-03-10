@@ -1,0 +1,70 @@
+{
+    "Resources": {
+        "myASG": {
+            "Type": "AWS::AutoScaling::AutoScalingGroup",
+            "Properties": {
+                "AvailabilityZones": {
+                    "Fn::GetAZs": ""
+                },
+                "LaunchConfigurationName": {
+                    "Ref": "myLaunchConfig"
+                },
+                "MinSize": "1",
+                "MaxSize": "1"
+            }
+        },
+
+        "myLaunchConfig": {
+            "Type": "AWS::AutoScaling::LaunchConfiguration",
+            "Properties": {
+                "LaunchConfigurationName": "myLaunchConfig-Week2",
+                "KeyName": "aws-course-key-pair-useast1",
+                "ImageId": "ami-0a887e401f7654935",
+                "SecurityGroups": [{
+                        "Ref": "mySecurityGroup"
+                    }
+                ],
+                "InstanceType": "t2.micro",
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash \n",
+                                "sudo yum -y update \n",
+                                "mkdir -m 777 /home/ec2-user/files \n",
+                                "aws s3 sync s3://aws-course-art-bucket-101 home/ec2-user/files/  \n"
+                            ]
+                        ]
+                    }
+                },
+                "IamInstanceProfile": {
+                    "Ref": "RootInstanceProfile"
+                }
+            }
+        },
+
+		"RootInstanceProfile": {
+			"Type": "AWS::IAM::InstanceProfile",
+			"Properties": {
+				"Path": "/",
+				"Roles": ["myRoleS3FullAccessForEC2-Week2"]
+			}
+		},
+
+        "mySecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "SSH access group",
+                "GroupName": "mySG-Week2",
+                "SecurityGroupIngress": [{
+                        "IpProtocol": "tcp",
+                        "FromPort": 22,
+                        "ToPort": 22,
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
+            }
+        }
+    }
+}
