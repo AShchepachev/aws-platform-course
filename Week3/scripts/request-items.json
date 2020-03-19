@@ -1,0 +1,36 @@
+{
+    "Villains": [
+        {
+            "PutRequest": {
+                "Item": {
+                    "Country": {"S": "Germany"},
+                    "Person": {"S": "Hitler"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "Country": {"S": "Germany"},
+                    "Person": {"S": "Herring"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "Country": {"S": "Russia"},
+                    "Person": {"S": "Stalin"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "Country": {"S": "Russia"},
+                    "Person": {"S": "Putin"}
+                }
+            }
+        }
+    ]
+}
